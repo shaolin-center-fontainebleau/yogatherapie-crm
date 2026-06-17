@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Yoga Thérapie Fontainebleau</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#F8FAF9;color:#1a1a1a;display:flex;min-height:100vh}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer}
+input,select{font-family:inherit;outline:none}
+
+/* SIDEBAR */
+#sidebar{width:220px;background:#0F6E56;color:#fff;display:flex;flex-direction:column;flex-shrink:0;position:sticky;top:0;height:100vh}
+#logo{padding:18px 16px;border-bottom:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;gap:10px}
+#logo svg{flex-shrink:0;background:#fff;border-radius:8px;padding:4px}
+#logo-text .t1{font-size:11px;font-weight:700;color:#9FE1CB;letter-spacing:1px}
+#logo-text .t2{font-size:9px;color:rgba(255,255,255,0.6)}
+#logo-text .t3{font-size:9px;color:rgba(255,255,255,0.4);font-style:italic}
+nav{padding:12px 0;flex:1}
+nav button{display:flex;align-items:center;gap:10px;width:100%;padding:10px 16px;background:transparent;border:none;color:rgba(255,255,255,0.7);font-size:13px;border-left:3px solid transparent;text-align:left;transition:all 0.15s}
+nav button:hover{background:rgba(255,255,255,0.1);color:#fff}
+nav button.active{background:rgba(255,255,255,0.15);color:#fff;border-left-color:#9FE1CB}
+nav button i{font-size:16px}
+#sidebar-bottom{padding:12px 16px;border-top:1px solid rgba(255,255,255,0.1);display:flex;flex-direction:column;gap:8px}
+.sb-btn{display:flex;align-items:center;gap:8px;width:100%;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:6px;color:#9FE1CB;padding:8px 10px;font-size:12px}
+.sb-btn:hover{background:rgba(255,255,255,0.2)}
+.gcal-ok{display:flex;align-items:center;gap:6px;color:#9FE1CB;font-size:12px;padding:6px 4px}
+
+/* MAIN */
+#main{flex:1;overflow:auto;padding:24px 28px}
+.page{display:none}
+.page.active{display:block}
+
+/* CARDS */
+.card{background:#fff;border-radius:10px;border:0.5px solid #e0e0e0;padding:18px 20px;margin-bottom:14px}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+.kpi{background:#fff;border-radius:10px;border:0.5px solid #e0e0e0;padding:16px 18px}
+.kpi label{font-size:12px;color:#888;display:block;margin-bottom:6px}
+.kpi .val{font-size:26px;font-weight:500}
+.two-col{display:grid;grid-template-columns:1.4fr 1fr;gap:16px;margin-bottom:14px}
+.three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:14px}
+.four-col{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+
+/* TABLES */
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead tr{background:#f8faf9}
+th{padding:9px 12px;text-align:left;color:#888;font-weight:500;font-size:12px;border-bottom:0.5px solid #e0e0e0}
+td{padding:9px 12px;border-bottom:0.5px solid #f0f0f0}
+tr:last-child td{border-bottom:none}
+tr.tfoot td{background:#f8faf9;border-top:1px solid #e0e0e0;font-weight:500}
+.tbl-wrap{background:#fff;border-radius:10px;border:0.5px solid #e0e0e0;overflow:hidden}
+
+/* BADGES */
+.badge{display:inline-block;border-radius:10px;padding:2px 10px;font-size:11px;font-weight:500}
+.badge-green{background:#E1F5EE;color:#0F6E56}
+.badge-blue{background:#E6F1FB;color:#185FA5}
+.badge-amber{background:#FAEEDA;color:#854F0B}
+.badge-red{background:#FCEBEB;color:#A32D2D}
+.badge-gray{background:#f0f0f0;color:#666}
+
+/* BAR CHART */
+.bar-chart{display:flex;align-items:flex-end;gap:6px;height:130px;margin-top:8px}
+.bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px}
+.bar-pair{display:flex;gap:2px;align-items:flex-end;width:100%}
+.bar{border-radius:3px 3px 0 0;transition:height 0.3s;min-height:2px}
+.bar-label{font-size:10px;color:#888;text-align:center}
+.bar-val{font-size:9px;color:#888}
+
+/* PIPELINE */
+.pipeline{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+.pipe-col{background:#fff;border-radius:10px;border:0.5px solid #e0e0e0;padding:12px}
+.pipe-header{display:flex;align-items:center;gap:6px;margin-bottom:8px}
+.pipe-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.pipe-card{background:#f8faf9;border-radius:6px;padding:7px 9px;margin-bottom:5px;cursor:pointer;border:0.5px solid #ebebeb;font-size:12px}
+.pipe-card:hover{background:#E1F5EE}
+.pipe-card .pn{font-weight:500}
+.pipe-card .pt{color:#888;font-size:11px}
+
+/* KANBAN */
+.kanban{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.kan-col{background:#fff;border-radius:10px;border:0.5px solid #e0e0e0;padding:14px}
+.kan-header{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.kan-card{background:#f8faf9;border-radius:8px;padding:10px 12px;margin-bottom:8px;border:0.5px solid #ebebeb}
+.kan-footer{display:flex;gap:4px;margin-top:6px}
+.kan-mv{font-size:10px;border-radius:4px;background:transparent;padding:2px 6px}
+
+/* AGENDA */
+.agenda-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid #f0f0f0}
+.agenda-item:last-child{border-bottom:none}
+.agenda-time{background:#E1F5EE;color:#0F6E56;border-radius:6px;padding:4px 8px;font-size:11px;font-weight:500;min-width:44px;text-align:center}
+
+/* FEEDBACK */
+#feedback{display:none;background:#E1F5EE;color:#0F6E56;padding:10px 16px;border-radius:8px;margin-bottom:16px;font-size:13px}
+
+/* CSV PREVIEW */
+#csv-preview{display:none;background:#E1F5EE;border:1px solid #5DCAA5;border-radius:10px;padding:16px;margin-bottom:16px}
+#csv-preview table{font-size:11px}
+#csv-preview th{background:#5DCAA5;color:#fff}
+
+/* DETAIL */
+#client-detail{display:none}
+.detail-grid{display:grid;grid-template-columns:1fr 1.6fr;gap:16px}
+.avatar{width:50px;height:50px;border-radius:50%;background:#E1F5EE;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:500;color:#0F6E56;flex-shrink:0}
+.detail-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:0.5px solid #f5f5f5}
+.detail-row:last-child{border-bottom:none}
+.detail-row i{color:#bbb;font-size:14px;width:18px}
+.detail-row .dk{color:#888;font-size:12px;min-width:95px}
+.detail-row .dv{font-size:13px}
+.back-btn{display:flex;align-items:center;gap:6px;background:transparent;border:none;color:#0F6E56;font-size:13px;margin-bottom:16px;padding:0}
+
+/* PAGE HEADER */
+.page-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.page-header h1{font-size:20px;font-weight:500}
+.year-toggle{display:flex;gap:8px}
+.year-btn{background:#fff;color:#0F6E56;border:1px solid #5DCAA5;border-radius:6px;padding:5px 14px;font-size:13px}
+.year-btn.active{background:#5DCAA5;color:#fff}
+.legend{display:flex;gap:16px;font-size:12px;align-items:center}
+.leg-dot{width:10px;height:10px;border-radius:2px;display:inline-block;margin-right:4px}
+
+/* SEARCH */
+#client-search{border:0.5px solid #e0e0e0;border-radius:6px;padding:6px 12px;font-size:13px;width:160px}
+
+/* CONNECT PROMPT */
+.connect-prompt{text-align:center;padding:40px;border:1px dashed #5DCAA5;border-radius:10px;background:#fff}
+.connect-prompt i{font-size:44px;color:#5DCAA5;display:block;margin-bottom:12px}
+.connect-btn{background:#5DCAA5;color:#fff;border:none;border-radius:8px;padding:10px 28px;font-size:14px;font-weight:500;margin-top:16px}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div id="sidebar">
+  <div id="logo">
+    <svg width="40" height="40" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+      <path d="M52 10 C44 25 42 40 48 55 C42 70 44 85 50 100" stroke="#5DCAA5" stroke-width="7" fill="none" stroke-linecap="round"/>
+      <path d="M68 10 C76 25 78 40 72 55 C78 70 76 85 70 100" stroke="#5DCAA5" stroke-width="7" fill="none" stroke-linecap="round"/>
+      <ellipse cx="60" cy="30" rx="8" ry="5.5" fill="#5DCAA5"/>
+      <ellipse cx="60" cy="45" rx="7.5" ry="5" fill="#5DCAA5"/>
+      <ellipse cx="60" cy="60" rx="8" ry="5.5" fill="#5DCAA5"/>
+      <ellipse cx="60" cy="75" rx="7.5" ry="5" fill="#5DCAA5"/>
+      <ellipse cx="60" cy="90" rx="8" ry="5.5" fill="#5DCAA5"/>
+    </svg>
+    <div id="logo-text">
+      <div class="t1">YOGA THÉRAPIE</div>
+      <div class="t2">FONTAINEBLEAU</div>
+      <div class="t3">Patricia Mela</div>
+    </div>
+  </div>
+  <nav>
+    <button class="active" onclick="goPage('dashboard')"><i class="ti ti-layout-dashboard"></i>Dashboard</button>
+    <button onclick="goPage('clients')"><i class="ti ti-users"></i>Clients</button>
+    <button onclick="goPage('agenda')"><i class="ti ti-calendar"></i>Agenda</button>
+    <button onclick="goPage('compta')"><i class="ti ti-chart-bar"></i>Comptabilité</button>
+    <button onclick="goPage('projets')"><i class="ti ti-layout-kanban"></i>Projets & Canaux</button>
+  </nav>
+  <div id="sidebar-bottom">
+    <button class="sb-btn" id="gcal-btn" onclick="connectGcal()"><i class="ti ti-calendar" style="font-size:14px"></i>Connecter Google Cal</button>
+    <button class="sb-btn" onclick="document.getElementById('csv-input').click()"><i class="ti ti-upload" style="font-size:14px"></i>Importer CSV</button>
+    <input id="csv-input" type="file" accept=".csv" style="display:none" onchange="handleCSV(event)"/>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div id="main">
+  <div id="feedback"></div>
+  <div id="csv-preview">
+    <div style="font-weight:500;color:#0F6E56;margin-bottom:8px" id="csv-title"></div>
+    <div style="overflow-x:auto;margin-bottom:12px"><table id="csv-table"></table></div>
+    <div style="display:flex;gap:8px">
+      <button onclick="importCSV()" style="background:#5DCAA5;color:#fff;border:none;border-radius:6px;padding:6px 16px;font-size:13px">Importer</button>
+      <button onclick="cancelCSV()" style="background:transparent;border:1px solid #5DCAA5;border-radius:6px;padding:6px 16px;color:#0F6E56;font-size:13px">Annuler</button>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="page-dashboard" class="page active">
+    <div class="page-header">
+      <div>
+        <h1 id="greeting"></h1>
+        <p id="today-date" style="color:#888;font-size:13px;margin-top:2px"></p>
+      </div>
+      <span class="badge badge-green" id="seances-badge"></span>
+    </div>
+    <div class="kpi-grid">
+      <div class="kpi"><label>Clientes actives</label><div class="val" id="kpi-actives" style="color:#5DCAA5"></div></div>
+      <div class="kpi"><label>CA 2026 (€)</label><div class="val" id="kpi-ca" style="color:#EF9F27"></div></div>
+      <div class="kpi"><label>Résultat net 2026</label><div class="val" id="kpi-res"></div></div>
+      <div class="kpi"><label>Leads actifs</label><div class="val" id="kpi-leads" style="color:#D4537E"></div></div>
+    </div>
+    <div class="two-col">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div style="font-weight:500">Recettes 2026</div>
+          <span style="color:#0F6E56;font-weight:500;font-size:13px" id="dash-ca-label"></span>
+        </div>
+        <div class="bar-chart" id="dash-chart"></div>
+      </div>
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <div style="font-weight:500">Agenda du jour</div>
+          <span id="gcal-badge" style="display:none" class="badge badge-green">Google Cal</span>
+        </div>
+        <div id="agenda-list"></div>
+        <button id="gcal-connect-dash" onclick="connectGcal()" style="margin-top:10px;width:100%;background:#E1F5EE;color:#0F6E56;border:none;border-radius:6px;padding:6px 12px;font-size:11px">
+          <i class="ti ti-calendar"></i> Connecter Google Calendar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CLIENTS -->
+  <div id="page-clients" class="page">
+    <div id="client-list">
+      <div class="page-header">
+        <h1>Clients <span id="clients-count" style="font-size:14px;color:#888;font-weight:400"></span></h1>
+        <div style="display:flex;gap:8px;align-items:center">
+          <input id="client-search" placeholder="Rechercher…" oninput="renderClients()"/>
+          <span class="badge badge-green" id="clients-summary"></span>
+        </div>
+      </div>
+      <div class="pipeline" id="pipeline"></div>
+      <div class="tbl-wrap"><table><thead><tr><th>Nom</th><th>Forfait</th><th>Statut</th><th>Lead</th><th>Email</th><th>Téléphone</th><th>Paiement</th><th></th></tr></thead><tbody id="clients-tbody"></tbody></table></div>
+    </div>
+    <div id="client-detail">
+      <button class="back-btn" onclick="closeDetail()"><i class="ti ti-arrow-left"></i> Retour</button>
+      <div class="detail-grid">
+        <div class="card">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+            <div class="avatar" id="detail-avatar"></div>
+            <div><div style="font-weight:500;font-size:16px" id="detail-name"></div><span id="detail-badge"></span></div>
+          </div>
+          <div id="detail-rows"></div>
+        </div>
+        <div class="card">
+          <div style="font-weight:500;margin-bottom:10px">Notes thérapeutiques</div>
+          <div id="detail-notes" style="background:#f8fdf9;border-radius:8px;padding:14px;font-size:13px;color:#444;line-height:1.7;margin-bottom:16px"></div>
+          <div style="font-weight:500;margin-bottom:10px">Forfait</div>
+          <div id="detail-forfait" style="font-size:13px;color:#555"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AGENDA -->
+  <div id="page-agenda" class="page">
+    <div class="page-header">
+      <h1>Agenda</h1>
+      <span id="gcal-sync-badge" style="display:none" class="badge badge-green"><i class="ti ti-circle-check"></i> Synchronisé</span>
+    </div>
+    <div id="agenda-content">
+      <div class="connect-prompt">
+        <i class="ti ti-calendar"></i>
+        <div style="font-weight:500;font-size:16px;margin-bottom:6px">Connecte ton Google Calendar</div>
+        <div style="color:#888;font-size:13px">Tes vraies séances apparaîtront ici.</div>
+        <button class="connect-btn" onclick="connectGcal()">Connecter maintenant</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPTA -->
+  <div id="page-compta" class="page">
+    <div class="page-header">
+      <h1>Comptabilité</h1>
+      <div class="year-toggle">
+        <button class="year-btn active" id="btn-2026" onclick="setYear('2026')">2026</button>
+        <button class="year-btn" id="btn-2025" onclick="setYear('2025')">2025</button>
+      </div>
+    </div>
+    <div class="kpi-grid" id="compta-kpis"></div>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div style="font-weight:500" id="compta-chart-title"></div>
+        <div class="legend">
+          <span><span class="leg-dot" style="background:#5DCAA5"></span>Recettes</span>
+          <span><span class="leg-dot" style="background:#F09595"></span>Dépenses</span>
+        </div>
+      </div>
+      <div class="bar-chart" id="compta-chart" style="height:150px"></div>
+    </div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Mois</th><th>Recettes</th><th>Dépenses</th><th>Résultat</th></tr></thead>
+      <tbody id="compta-tbody"></tbody>
+    </table></div>
+  </div>
+
+  <!-- PROJETS -->
+  <div id="page-projets" class="page">
+    <div class="page-header"><h1>Projets & Canaux de diffusion</h1></div>
+    <div class="card" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px">
+      <input id="task-input" placeholder="Nouvelle tâche…" style="flex:1;min-width:180px;border:0.5px solid #e0e0e0;border-radius:6px;padding:7px 12px;font-size:13px"/>
+      <select id="task-canal" style="border:0.5px solid #e0e0e0;border-radius:6px;padding:7px 10px;font-size:13px">
+        <option>Instagram</option><option>Email</option><option>Site web</option><option>Google Ads</option><option>Print</option><option>Facebook</option>
+      </select>
+      <select id="task-prio" style="border:0.5px solid #e0e0e0;border-radius:6px;padding:7px 10px;font-size:13px">
+        <option>Haute</option><option>Moyenne</option><option>Basse</option>
+      </select>
+      <button onclick="addTask()" style="background:#5DCAA5;color:#fff;border:none;border-radius:6px;padding:7px 16px;font-size:13px"><i class="ti ti-plus"></i> Ajouter</button>
+    </div>
+    <div class="kanban" id="kanban"></div>
+    <div class="card" style="margin-top:14px">
+      <div style="font-weight:500;margin-bottom:14px">Répartition par canal</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px" id="canal-stats"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── DATA ──
+const CLIENTS = [
+  {id:1,prenom:"Sophie",nom:"Lion",email:"sophy.lion@gmail.com",tel:"330631920785",forfait:"Pack 3 séances",statut:"Actif",lead:"Nouveau",notes:""},
+  {id:2,prenom:"Christine",nom:"Alves",email:"",tel:"33619163717",forfait:"—",statut:"Prospect",lead:"Ouvert",notes:""},
+  {id:3,prenom:"Nahida",nom:"",email:"",tel:"33631498968",forfait:"—",statut:"Prospect",lead:"Ouvert",notes:""},
+  {id:4,prenom:"Nadège",nom:"Gohoungo",email:"",tel:"33782986353",forfait:"—",statut:"Prospect",lead:"Ouvert",notes:""},
+  {id:5,prenom:"Laure",nom:"Terrier",email:"",tel:"33663716369",forfait:"—",statut:"Prospect",lead:"Ouvert",notes:""},
+  {id:6,prenom:"Fabienne",nom:"",email:"",tel:"33685256036",forfait:"—",statut:"Prospect",lead:"Ouvert",notes:""},
+  {id:7,prenom:"Elisabeth",nom:"",email:"",tel:"",forfait:"—",statut:"Prospect",lead:"Ouvert",notes:""},
+  {id:8,prenom:"Christelle",nom:"",email:"",tel:"330663943683",forfait:"—",statut:"Prospect",lead:"Ouvert",notes:""},
+  {id:9,prenom:"Aude",nom:"Pradal",email:"",tel:"330621664980",forfait:"Aucun",statut:"Inactif",lead:"À relancer",notes:""},
+  {id:10,prenom:"Pamela",nom:"Racine",email:"pamelaracine1@gmail.com",tel:"330641471298",forfait:"Pack 3 séances",statut:"Actif",lead:"En cours",notes:""},
+  {id:11,prenom:"Cyrille",nom:"Klein",email:"",tel:"33610356736",forfait:"Massage",statut:"Inactif",lead:"À relancer",notes:""},
+  {id:12,prenom:"Céline",nom:"Doring",email:"",tel:"33665453398",forfait:"Pack 10 séances",statut:"Actif",lead:"En cours",notes:""},
+  {id:13,prenom:"Sophie",nom:"",email:"",tel:"33782339791",forfait:"Bilan",statut:"Inactif",lead:"Perdu",notes:""},
+  {id:14,prenom:"Mariangela",nom:"",email:"",tel:"330744883149",forfait:"Bilan",statut:"Inactif",lead:"Terminé",notes:""},
+  {id:15,prenom:"Andrea",nom:"Agilera",email:"",tel:"330603777760",forfait:"Massage",statut:"Inactif",lead:"Terminé",notes:""},
+  {id:16,prenom:"Kittia",nom:"",email:"",tel:"330689650546",forfait:"Massage",statut:"Prospect",lead:"Intéressée",notes:""},
+  {id:17,prenom:"Valerie",nom:"Wolters",email:"",tel:"33663595656",forfait:"Bilan",statut:"Inactif",lead:"À relancer",notes:""},
+  {id:18,prenom:"Laure",nom:"Lust",email:"",tel:"33767665263",forfait:"Bilan",statut:"Inactif",lead:"Perdu",notes:""},
+  {id:19,prenom:"Jessica",nom:"Madaleno",email:"",tel:"33614402589",forfait:"Bilan",statut:"Inactif",lead:"À relancer",notes:""},
+  {id:20,prenom:"Sandrine",nom:"Postiga",email:"psy.ferreira77@gmail.com",tel:"330627510050",forfait:"Pack 10 séances",statut:"Actif",lead:"En cours",notes:""},
+  {id:21,prenom:"Josette",nom:"Catrice",email:"josette.cat77@gmail.com",tel:"33674370963",forfait:"Bilan",statut:"Actif",lead:"En cours",notes:""},
+  {id:22,prenom:"Victoria",nom:"Ligny",email:"vlignt@ligny-avocat.com",tel:"330626995456",forfait:"Pack 10 séances",statut:"Actif",lead:"En cours",notes:""},
+  {id:23,prenom:"Peggy",nom:"",email:"peggy.malianin@gmail.com",tel:"",forfait:"Bilan",statut:"Inactif",lead:"À relancer",notes:""},
+  {id:24,prenom:"Jacqueline",nom:"",email:"jacqueline.kan@orange.fr",tel:"",forfait:"Pack 3 séances",statut:"Inactif",lead:"À relancer",notes:""},
+  {id:25,prenom:"Elise",nom:"Bouvet",email:"Bouvetelise@aol.fr",tel:"698873353",forfait:"Bilan",statut:"Prospect",lead:"",notes:""},
+  {id:26,prenom:"Maureen",nom:"Durix Meral",email:"omaureen.meralo@gmail.com",tel:"664373326",forfait:"Bilan",statut:"Actif",lead:"En cours",notes:""},
+];
+
+const COMPTA = {
+  2025:[
+    {m:"Jan",rec:0,dep:0},{m:"Fév",rec:0,dep:0},{m:"Mar",rec:0,dep:0},{m:"Avr",rec:0,dep:0},
+    {m:"Mai",rec:0,dep:0},{m:"Jun",rec:0,dep:0},{m:"Jul",rec:0,dep:0},{m:"Aoû",rec:330,dep:0},
+    {m:"Sep",rec:127,dep:450},{m:"Oct",rec:1254,dep:919},{m:"Nov",rec:1575,dep:1150},{m:"Déc",rec:0,dep:0},
+  ],
+  2026:[
+    {m:"Jan",rec:1600,dep:1466},{m:"Fév",rec:1146,dep:1177},{m:"Mar",rec:1603,dep:1723},
+    {m:"Avr",rec:2607,dep:1398},{m:"Mai",rec:1383,dep:2000},{m:"Jun",rec:0,dep:0},
+    {m:"Jul",rec:0,dep:0},{m:"Aoû",rec:0,dep:0},{m:"Sep",rec:0,dep:0},
+    {m:"Oct",rec:0,dep:0},{m:"Nov",rec:0,dep:0},{m:"Déc",rec:0,dep:0},
+  ]
+};
+
+let tasks = [
+  {id:1,col:"inprogress",titre:"Refonte page Instagram",canal:"Instagram",priorite:"Haute"},
+  {id:2,col:"todo",titre:"Newsletter juin",canal:"Email",priorite:"Haute"},
+  {id:3,col:"todo",titre:"Mise à jour site web",canal:"Site web",priorite:"Moyenne"},
+  {id:4,col:"inprogress",titre:"Reels yoga matinal",canal:"Instagram",priorite:"Moyenne"},
+  {id:5,col:"done",titre:"Flyer atelier juin",canal:"Print",priorite:"Basse"},
+  {id:6,col:"done",titre:"Publication blog",canal:"Site web",priorite:"Basse"},
+];
+
+let currentYear = "2026";
+let currentCSV = null;
+let gcalEvents = [];
+let selectedClient = null;
+
+// ── HELPERS ──
+const fmt = n => Number(n).toLocaleString("fr-FR");
+const fullName = c => (c.prenom+" "+c.nom).trim();
+const initials = c => fullName(c).split(" ").map(w=>w[0]||"").join("").slice(0,2).toUpperCase();
+const sc = s => s==="Actif"?"#5DCAA5":s==="Nouveau"?"#378ADD":s==="Prospect"?"#EF9F27":"#B4B2A9";
+const badgeClass = s => s==="Actif"?"badge-green":s==="Nouveau"?"badge-blue":s==="Prospect"?"badge-amber":"badge-gray";
+const pc = p => p==="Haute"?"#E24B4A":p==="Moyenne"?"#EF9F27":"#888780";
+
+function showFeedback(msg) {
+  const el = document.getElementById("feedback");
+  el.textContent = msg; el.style.display = "block";
+  setTimeout(()=>el.style.display="none", 4000);
+}
+
+// ── NAVIGATION ──
+function goPage(id) {
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
+  document.getElementById("page-"+id).classList.add("active");
+  document.querySelector(`nav button[onclick="goPage('${id}')"]`).classList.add("active");
+  if(id==="clients") renderClients();
+  if(id==="compta") renderCompta();
+  if(id==="projets") renderKanban();
+}
+
+// ── DASHBOARD ──
+function initDashboard() {
+  const now = new Date();
+  const jours = ["dimanche","lundi","mardi","mercredi","jeudi","vendredi","samedi"];
+  const mois = ["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
+  document.getElementById("greeting").textContent = "Bonjour, Patricia 👋";
+  document.getElementById("today-date").textContent = jours[now.getDay()]+" "+now.getDate()+" "+mois[now.getMonth()]+" "+now.getFullYear();
+
+  const actives = CLIENTS.filter(c=>c.statut==="Actif").length;
+  const leads = CLIENTS.filter(c=>["En cours","Ouvert","Intéressée"].includes(c.lead)).length;
+  const ca2026 = COMPTA[2026].reduce((a,d)=>a+d.rec,0);
+  const dep2026 = COMPTA[2026].reduce((a,d)=>a+d.dep,0);
+  const res2026 = ca2026 - dep2026;
+
+  document.getElementById("kpi-actives").textContent = actives;
+  document.getElementById("kpi-ca").textContent = fmt(ca2026);
+  const resEl = document.getElementById("kpi-res");
+  resEl.textContent = (res2026>=0?"+":"")+fmt(res2026)+" €";
+  resEl.style.color = res2026>=0?"#3B6D11":"#A32D2D";
+  document.getElementById("kpi-leads").textContent = leads;
+  document.getElementById("seances-badge").textContent = "4 séances aujourd'hui";
+  document.getElementById("dash-ca-label").textContent = fmt(ca2026)+" €";
+
+  // Mini bar chart
+  const chartEl = document.getElementById("dash-chart");
+  chartEl.innerHTML = "";
+  const data = COMPTA[2026].filter(d=>d.rec>0);
+  const maxR = Math.max(...data.map(d=>d.rec),1);
+  data.forEach(d=>{
+    chartEl.innerHTML += `<div class="bar-wrap">
+      <div class="bar-val">${d.rec}</div>
+      <div class="bar" style="width:100%;height:${Math.round((d.rec/maxR)*110)}px;background:#5DCAA5"></div>
+      <div class="bar-label">${d.m}</div>
+    </div>`;
+  });
+
+  // Agenda demo
+  renderDemoAgenda();
+}
+
+function renderDemoAgenda() {
+  const demo = [
+    {h:"09:00",c:"Sophie Lion",t:"Pack 3 séances"},
+    {h:"10:30",c:"Pamela Racine",t:"Pack 3 séances"},
+    {h:"14:00",c:"Céline Doring",t:"Pack 10 séances"},
+    {h:"16:00",c:"Victoria Ligny",t:"Pack 10 séances"},
+  ];
+  let html = demo.map(a=>`<div class="agenda-item"><div class="agenda-time">${a.h}</div><div><div style="font-size:13px;font-weight:500">${a.c}</div><div style="font-size:11px;color:#888">${a.t}</div></div></div>`).join("");
+  document.getElementById("agenda-list").innerHTML = html;
+}
+
+// ── CLIENTS ──
+function renderClients() {
+  const q = document.getElementById("client-search").value.toLowerCase();
+  const filtered = CLIENTS.filter(c=>!q||fullName(c).toLowerCase().includes(q)||c.email.toLowerCase().includes(q));
+
+  document.getElementById("clients-count").textContent = "("+CLIENTS.length+")";
+  document.getElementById("clients-summary").textContent =
+    CLIENTS.filter(c=>c.statut==="Actif").length+" actives · "+CLIENTS.filter(c=>c.statut==="Prospect").length+" prospects";
+
+  // Pipeline
+  const pipe = document.getElementById("pipeline");
+  pipe.innerHTML = ["Actif","Nouveau","Prospect","Inactif"].map(s=>{
+    const cols = CLIENTS.filter(c=>c.statut===s);
+    const cards = cols.slice(0,3).map(c=>`<div class="pipe-card" onclick="openDetail(${c.id})"><div class="pn">${fullName(c)}</div><div class="pt">${c.forfait}</div></div>`).join("");
+    const more = cols.length>3?`<div style="font-size:10px;color:#aaa;text-align:center">+${cols.length-3} autres</div>`:"";
+    return `<div class="pipe-col">
+      <div class="pipe-header"><div class="pipe-dot" style="background:${sc(s)}"></div>
+      <span style="font-weight:500;font-size:12px">${s}</span>
+      <span class="badge" style="margin-left:auto;background:${sc(s)}22;color:${sc(s)}">${cols.length}</span></div>
+      ${cards}${more}</div>`;
+  }).join("");
+
+  // Table
+  const tbody = document.getElementById("clients-tbody");
+  tbody.innerHTML = filtered.map(c=>`<tr onclick="openDetail(${c.id})" style="cursor:pointer">
+    <td style="font-weight:500">${fullName(c)}</td>
+    <td style="color:#555;font-size:12px">${c.forfait}</td>
+    <td><span class="badge ${badgeClass(c.statut)}">${c.statut}</span></td>
+    <td style="color:#777;font-size:12px">${c.lead||"—"}</td>
+    <td style="color:#555;font-size:12px">${c.email||"—"}</td>
+    <td style="color:#555;font-size:12px">${c.tel||"—"}</td>
+    <td><span style="color:#0F6E56;font-size:12px">À jour</span></td>
+    <td><i class="ti ti-chevron-right" style="color:#ccc"></i></td>
+  </tr>`).join("");
+}
+
+function openDetail(id) {
+  selectedClient = CLIENTS.find(c=>c.id===id);
+  if(!selectedClient) return;
+  document.getElementById("client-list").style.display = "none";
+  document.getElementById("client-detail").style.display = "block";
+  document.getElementById("detail-avatar").textContent = initials(selectedClient);
+  document.getElementById("detail-name").textContent = fullName(selectedClient);
+  document.getElementById("detail-badge").innerHTML = `<span class="badge ${badgeClass(selectedClient.statut)}">${selectedClient.statut}</span>`;
+  document.getElementById("detail-notes").textContent = selectedClient.notes || "Aucune note thérapeutique.";
+  document.getElementById("detail-forfait").textContent = selectedClient.forfait || "—";
+  document.getElementById("detail-rows").innerHTML = [
+    ["ti-mail","Email",selectedClient.email||"—"],
+    ["ti-phone","Téléphone",selectedClient.tel||"—"],
+    ["ti-target","Lead",selectedClient.lead||"—"],
+    ["ti-coin-euro","Paiement","À jour"],
+  ].map(([ic,k,v])=>`<div class="detail-row"><i class="ti ${ic}"></i><span class="dk">${k}</span><span class="dv">${v}</span></div>`).join("");
+}
+
+function closeDetail() {
+  document.getElementById("client-list").style.display = "block";
+  document.getElementById("client-detail").style.display = "none";
+}
+
+// ── COMPTA ──
+function setYear(y) {
+  currentYear = y;
+  document.getElementById("btn-2026").classList.toggle("active",y==="2026");
+  document.getElementById("btn-2025").classList.toggle("active",y==="2025");
+  renderCompta();
+}
+
+function renderCompta() {
+  const data = COMPTA[currentYear];
+  const totalRec = data.reduce((a,d)=>a+d.rec,0);
+  const totalDep = data.reduce((a,d)=>a+d.dep,0);
+  const res = totalRec - totalDep;
+  const best = data.reduce((a,d)=>d.rec>a.rec?d:a,{m:"—",rec:0});
+
+  document.getElementById("compta-kpis").innerHTML = [
+    {label:"Recettes "+currentYear,val:fmt(totalRec)+" €",color:"#5DCAA5"},
+    {label:"Dépenses "+currentYear,val:fmt(totalDep)+" €",color:"#E24B4A"},
+    {label:"Résultat net",val:(res>=0?"+":"")+fmt(res)+" €",color:res>=0?"#3B6D11":"#A32D2D"},
+    {label:"Meilleur mois",val:best.m+" ("+fmt(best.rec)+" €)",color:"#378ADD"},
+  ].map(k=>`<div class="kpi"><label>${k.label}</label><div class="val" style="color:${k.color};font-size:18px">${k.val}</div></div>`).join("");
+
+  document.getElementById("compta-chart-title").textContent = "Recettes vs Dépenses "+currentYear;
+
+  // Chart
+  const maxV = Math.max(...data.map(d=>Math.max(d.rec,d.dep)),1);
+  document.getElementById("compta-chart").innerHTML = data.map(d=>`
+    <div class="bar-wrap">
+      <div class="bar-pair" style="height:130px;align-items:flex-end">
+        <div class="bar" style="flex:1;height:${d.rec>0?Math.round((d.rec/maxV)*125):2}px;background:${d.rec>0?"#5DCAA5":"#f0f0f0"};opacity:${d.rec>0?1:0.3}"></div>
+        <div class="bar" style="flex:1;height:${d.dep>0?Math.round((d.dep/maxV)*125):2}px;background:${d.dep>0?"#F09595":"#f0f0f0"};opacity:${d.dep>0?1:0.3}"></div>
+      </div>
+      <div class="bar-label">${d.m}</div>
+    </div>`).join("");
+
+  // Table
+  const active = data.filter(d=>d.rec>0||d.dep>0);
+  document.getElementById("compta-tbody").innerHTML = active.map(d=>{
+    const r=d.rec-d.dep;
+    return `<tr>
+      <td style="font-weight:500">${d.m} ${currentYear}</td>
+      <td style="color:#0F6E56;font-weight:500">${fmt(d.rec)} €</td>
+      <td style="color:#E24B4A">${fmt(d.dep)} €</td>
+      <td><span class="badge ${r>=0?"badge-green":"badge-red"}">${r>=0?"+":""}${fmt(r)} €</span></td>
+    </tr>`;
+  }).join("")+`<tr class="tfoot">
+    <td>TOTAL</td>
+    <td style="color:#0F6E56">${fmt(totalRec)} €</td>
+    <td style="color:#E24B4A">${fmt(totalDep)} €</td>
+    <td><span class="badge ${res>=0?"badge-green":"badge-red"}">${res>=0?"+":""}${fmt(res)} €</span></td>
+  </tr>`;
+}
+
+// ── KANBAN ──
+const kanCols = [{id:"todo",label:"À faire",color:"#5DCAA5"},{id:"inprogress",label:"En cours",color:"#FAC775"},{id:"done",label:"Terminé",color:"#97C459"}];
+
+function renderKanban() {
+  document.getElementById("kanban").innerHTML = kanCols.map(col=>{
+    const colTasks = tasks.filter(t=>t.col===col.id);
+    const cards = colTasks.map(t=>{
+      const others = kanCols.filter(c=>c.id!==col.id);
+      const btns = others.map(c=>`<button class="kan-mv" onclick="moveTask(${t.id},'${c.id}')" style="border:1px solid ${c.color}44;color:${c.color}">→ ${c.label}</button>`).join("");
+      return `<div class="kan-card">
+        <div style="font-size:13px;font-weight:500;margin-bottom:6px">${t.titre}</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <span class="badge badge-green" style="font-size:10px">${t.canal}</span>
+          <span style="color:${pc(t.priorite)};font-size:10px;font-weight:500">${t.priorite}</span>
+        </div>
+        <div class="kan-footer">${btns}</div>
+      </div>`;
+    }).join("");
+    return `<div class="kan-col">
+      <div class="kan-header">
+        <div class="pipe-dot" style="background:${col.color}"></div>
+        <span style="font-weight:500;font-size:13px">${col.label}</span>
+        <span class="badge" style="margin-left:auto;background:${col.color}22;color:${col.color}">${colTasks.length}</span>
+      </div>${cards}
+    </div>`;
+  }).join("");
+
+  // Canal stats
+  const canals = ["Instagram","Email","Site web","Google Ads","Print","Facebook"];
+  document.getElementById("canal-stats").innerHTML = canals.map(c=>{
+    const n = tasks.filter(t=>t.canal===c).length;
+    const pct = tasks.length?Math.round((n/tasks.length)*100):0;
+    return `<div style="display:flex;align-items:center;gap:10px">
+      <span style="font-size:12px;min-width:80px;color:#555">${c}</span>
+      <div style="flex:1;height:6px;background:#f0f0f0;border-radius:3px">
+        <div style="width:${pct}%;height:100%;background:#5DCAA5;border-radius:3px"></div>
+      </div>
+      <span style="font-size:11px;color:#888;min-width:14px">${n}</span>
+    </div>`;
+  }).join("");
+}
+
+function addTask() {
+  const titre = document.getElementById("task-input").value.trim();
+  if(!titre) return;
+  tasks.push({id:Date.now(),col:"todo",titre,canal:document.getElementById("task-canal").value,priorite:document.getElementById("task-prio").value});
+  document.getElementById("task-input").value="";
+  renderKanban();
+}
+
+function moveTask(id,col) {
+  const t = tasks.find(t=>t.id===id);
+  if(t){t.col=col;renderKanban();}
+}
+
+// ── CSV IMPORT ──
+let csvParsed = null;
+
+function handleCSV(e) {
+  const file = e.target.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const lines = ev.target.result.split("\n").filter(l=>l.trim());
+    const sep = lines[0].includes("\t")?"\t":",";
+    const headers = lines[0].split(sep).map(h=>h.trim().replace(/"/g,""));
+    const rows = lines.slice(1).filter(l=>l.trim()).map(l=>{
+      const vals=l.split(sep).map(v=>v.trim().replace(/"/g,""));
+      const obj={};headers.forEach((h,i)=>obj[h]=vals[i]||"");return obj;
+    });
+    csvParsed = {headers,rows,filename:file.name};
+    showCSVPreview();
+  };
+  reader.readAsText(file,"UTF-8");
+  e.target.value="";
+}
+
+function showCSVPreview() {
+  if(!csvParsed) return;
+  const isCompta = csvParsed.headers.some(h=>/janv|févr|mars|avr|mai|juin/i.test(h));
+  document.getElementById("csv-title").textContent = (isCompta?"Comptabilité":"Clients")+" — "+csvParsed.filename+" — "+csvParsed.rows.length+" ligne(s)";
+  const preview = csvParsed.rows.slice(0,5);
+  const cols = csvParsed.headers.slice(0,7);
+  document.getElementById("csv-table").innerHTML =
+    `<thead><tr>${cols.map(h=>`<th>${h}</th>`).join("")}</tr></thead>
+     <tbody>${preview.map(r=>`<tr>${cols.map(h=>`<td>${r[h]||""}</td>`).join("")}</tr>`).join("")}</tbody>`;
+  document.getElementById("csv-preview").style.display="block";
+}
+
+function cancelCSV() {
+  document.getElementById("csv-preview").style.display="none";
+  csvParsed=null;
+}
+
+function importCSV() {
+  if(!csvParsed) return;
+  const isCompta = csvParsed.headers.some(h=>/janv|févr|mars|avr|mai|juin/i.test(h));
+  if(isCompta) {
+    const yearMatch = csvParsed.headers.find(h=>/\d{4}/.test(h));
+    const year = yearMatch?yearMatch.match(/\d{4}/)[0]:"2026";
+    const mKeys = {janv:0,févr:1,mars:2,avr:3,mai:4,juin:5,juil:6,août:7,sept:8,oct:9,nov:10,déc:11};
+    const mNames = ["Jan","Fév","Mar","Avr","Mai","Jun","Jul","Aoû","Sep","Oct","Nov","Déc"];
+    const totRec=[0,0,0,0,0,0,0,0,0,0,0,0];
+    const totDep=[0,0,0,0,0,0,0,0,0,0,0,0];
+    csvParsed.rows.forEach(r=>{
+      const label=(r[Object.keys(r)[0]]||"").toLowerCase();
+      const isDep=label.includes("total dec")||label.includes("dépense")||label.includes("decaissement");
+      csvParsed.headers.forEach(h=>{
+        const mk=Object.keys(mKeys).find(k=>h.toLowerCase().startsWith(k));
+        if(mk===undefined)return;
+        const idx=mKeys[mk];
+        const val=parseFloat((r[h]||"").replace(/\s/g,"").replace(",",".").replace("(","").replace(")","").replace("€",""));
+        if(!isNaN(val)&&val>0){
+          if(isDep)totDep[idx]+=val;
+          else totRec[idx]+=val;
+        }
+      });
+    });
+    COMPTA[year]=mNames.map((m,i)=>({m,rec:Math.round(totRec[i]),dep:Math.round(totDep[i])}));
+    cancelCSV();
+    showFeedback("✓ Comptabilité "+year+" importée — "+csvParsed.filename);
+    if(document.getElementById("page-compta").classList.contains("active"))renderCompta();
+    initDashboard();
+  } else {
+    const newC=csvParsed.rows.filter(r=>(r["Prénom"]||r.prenom||"").trim()).map((r,i)=>({
+      id:CLIENTS.length+i+1,
+      prenom:r["Prénom"]||r.prenom||"",
+      nom:r["Nom"]||r.nom||"",
+      email:r["E-mail"]||r.email||"",
+      tel:String(r["Numéro de téléphone"]||r.tel||""),
+      forfait:r["Forfait1"]||r.forfait||"—",
+      statut:(r["Statut Cliente"]||"").includes("active")?"Actif":(r["Statut Cliente"]||"").includes("cours")?"Actif":"Prospect",
+      lead:r["Statut du lead"]||"",
+      notes:"",
+    }));
+    CLIENTS.push(...newC);
+    cancelCSV();
+    showFeedback("✓ "+newC.length+" client(s) importé(s)");
+    if(document.getElementById("page-clients").classList.contains("active"))renderClients();
+  }
+}
+
+// ── GOOGLE CALENDAR ──
+const CLIENT_ID="384963685085-fbbht0lom7nn427737tdlihkkrkuoijs.apps.googleusercontent.com";
+let gapiReady=false,tokenClient=null;
+
+function loadGapi(){
+  const s=document.createElement("script");
+  s.src="https://apis.google.com/js/api.js";
+  s.onload=()=>gapi.load("client",async()=>{
+    await gapi.client.init({discoveryDocs:["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"]});
+    gapiReady=true;
+  });
+  document.body.appendChild(s);
+  const s2=document.createElement("script");
+  s2.src="https://accounts.google.com/gsi/client";
+  s2.onload=()=>{
+    tokenClient=google.accounts.oauth2.initTokenClient({
+      client_id:CLIENT_ID,scope:"https://www.googleapis.com/auth/calendar.readonly",
+      callback:async resp=>{
+        if(resp.error){showFeedback("Erreur Google Calendar: "+resp.error);return;}
+        await fetchGcalEvents();
+      }
+    });
+  };
+  document.body.appendChild(s2);
+}
+
+async function connectGcal(){
+  if(!tokenClient){showFeedback("Chargement en cours, réessaie dans 2 secondes.");return;}
+  tokenClient.requestAccessToken({prompt:"consent"});
+}
+
+async function fetchGcalEvents(){
+  try{
+    const now=new Date();
+    const res=await gapi.client.calendar.events.list({
+      calendarId:"primary",
+      timeMin:new Date(now.getFullYear(),now.getMonth(),now.getDate()).toISOString(),
+      timeMax:new Date(now.getFullYear(),now.getMonth(),now.getDate()+14).toISOString(),
+      singleEvents:true,orderBy:"startTime",maxResults:50
+    });
+    gcalEvents=res.result.items||[];
+    document.getElementById("gcal-btn").innerHTML='<i class="ti ti-circle-check" style="font-size:14px"></i>Google Cal connecté ('+gcalEvents.length+')';
+    document.getElementById("gcal-badge").style.display="inline-block";
+    document.getElementById("gcal-connect-dash").style.display="none";
+    document.getElementById("gcal-sync-badge").style.display="inline-block";
+    renderGcalAgenda();
+    showFeedback("✓ Google Calendar connecté — "+gcalEvents.length+" événement(s)");
+  }catch(e){showFeedback("Erreur: "+e.message);}
+}
+
+function renderGcalAgenda(){
+  const today=gcalEvents.filter(e=>{
+    const d=new Date(e.start?.dateTime||e.start?.date),n=new Date();
+    return d.getFullYear()===n.getFullYear()&&d.getMonth()===n.getMonth()&&d.getDate()===n.getDate();
+  });
+  const upcoming=gcalEvents.filter(e=>{
+    const d=new Date(e.start?.dateTime||e.start?.date),n=new Date();
+    return !(d.getFullYear()===n.getFullYear()&&d.getMonth()===n.getMonth()&&d.getDate()===n.getDate());
+  });
+
+  // Dashboard agenda
+  document.getElementById("agenda-list").innerHTML = today.length===0
+    ? "<div style='color:#aaa;font-size:13px'>Aucun événement aujourd'hui.</div>"
+    : today.map(ev=>`<div class="agenda-item">
+        <div class="agenda-time">${ev.start?.dateTime?new Date(ev.start.dateTime).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"}):"Jour"}</div>
+        <div><div style="font-size:13px;font-weight:500">${ev.summary||"(Sans titre)"}</div>${ev.location?`<div style="font-size:11px;color:#888">${ev.location}</div>`:""}</div>
+      </div>`).join("");
+
+  // Agenda page
+  document.getElementById("agenda-content").innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div class="card"><div style="font-weight:500;color:#0F6E56;margin-bottom:14px">Aujourd'hui</div>
+        ${today.length===0?"<div style='color:#aaa;font-size:13px'>Aucun événement.</div>":today.map(ev=>`
+          <div class="agenda-item">
+            <div class="agenda-time">${ev.start?.dateTime?new Date(ev.start.dateTime).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"}):"Jour"}</div>
+            <div><div style="font-size:13px;font-weight:500">${ev.summary||"(Sans titre)"}</div>${ev.location?`<div style="font-size:11px;color:#aaa">${ev.location}</div>`:""}</div>
+          </div>`).join("")}
+      </div>
+      <div class="card"><div style="font-weight:500;margin-bottom:14px">À venir (14 jours)</div>
+        ${upcoming.length===0?"<div style='color:#aaa;font-size:13px'>Aucun événement.</div>":upcoming.slice(0,8).map(ev=>{
+          const d=new Date(ev.start?.dateTime||ev.start?.date);
+          const label=d.toLocaleDateString("fr-FR",{weekday:"short",day:"numeric",month:"short"});
+          const time=ev.start?.dateTime?new Date(ev.start.dateTime).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"}):"";
+          return `<div class="agenda-item">
+            <div style="font-size:11px;color:#888;min-width:72px">${label}</div>
+            <div style="flex:1"><div style="font-size:13px;font-weight:500">${ev.summary||"(Sans titre)"}</div>${time?`<div style="font-size:11px;color:#aaa">${time}</div>`:""}</div>
+          </div>`;
+        }).join("")}
+      </div>
+    </div>`;
+}
+
+// ── INIT ──
+initDashboard();
+loadGapi();
+</script>
+</body>
+</html>
